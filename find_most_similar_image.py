@@ -93,8 +93,16 @@ def precalculate_part(args):
     split_depth = args[1]
     tqdm_position = args[2]
 
-    return {candidate_path: get_avg_pixels(Image.open(candidate_path).convert("RGBA"), split_depth).tolist()
-            for candidate_path in tqdm(candidate_paths, position=tqdm_position)}
+    result = {}
+    for candidate_path in tqdm(candidate_paths, position=tqdm_position):
+        try:
+            img = Image.open(candidate_path).convert("RGBA")
+            avg_pixels = get_avg_pixels(img, split_depth).tolist()
+            result[candidate_path] = avg_pixels
+        except Exception as e:
+            print(f"failed to process {candidate_path}: {e}")
+            continue
+    return result
 
 def precalculate(candidate_paths, output_file, /, split_depth=2, process_count=1):
     data = {}
