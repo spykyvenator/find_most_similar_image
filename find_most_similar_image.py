@@ -105,8 +105,12 @@ def precalculate_part(args):
             continue
     if errors:
         print("some files failed to process")
-        for error in errors:
-            print(error, file=stderr)
+        threshold = 5
+        if len(errors) > threshold:
+            print(*(errors[:threshold] + ['...'] + errors[-2:]), sep='\n', file=stderr)
+        else:
+            print(*errors, sep='\n', file=stderr)
+        print()
     return result
 
 def precalculate(candidate_paths, output_file, /, split_depth=2, process_count=1):
