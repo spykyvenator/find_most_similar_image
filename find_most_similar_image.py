@@ -94,14 +94,19 @@ def precalculate_part(args):
     tqdm_position = args[2]
 
     result = {}
+    errors = []
     for candidate_path in tqdm(candidate_paths, position=tqdm_position):
         try:
             img = Image.open(candidate_path).convert("RGBA")
             avg_pixels = get_avg_pixels(img, split_depth).tolist()
             result[candidate_path] = avg_pixels
         except Exception as e:
-            print(f"failed to process {candidate_path}: {e}")
+            errors.append(f"failed to process {candidate_path}: {e}")
             continue
+    if errors:
+        print("some files failed to process")
+        for error in errors:
+            print(error, file=stderr)
     return result
 
 def precalculate(candidate_paths, output_file, /, split_depth=2, process_count=1):
