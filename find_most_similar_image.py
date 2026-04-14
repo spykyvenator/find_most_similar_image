@@ -107,7 +107,7 @@ def precalculate_part(args):
         print("some files failed to process")
         threshold = 5
         if len(errors) > threshold:
-            print(*(errors[:threshold] + ['...'] + errors[-2:]), sep='\n', file=stderr)
+            print(*(errors[:(threshold-1)] + ['...'] + errors[-2:]), sep='\n', file=stderr)
         else:
             print(*errors, sep='\n', file=stderr)
         print()
